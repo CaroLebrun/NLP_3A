@@ -1,6 +1,12 @@
 # NLP_3A
 
 
+## Prérequis 
+
+Executez à partir du dossier src dans le `terminal` la commande suivante : `touch __init__.py`
+
+## Notes
+
 Les identifiants des fichiers ont un sens : 
 -EL137_L_1981_06_077_03_2_PF_01
 
