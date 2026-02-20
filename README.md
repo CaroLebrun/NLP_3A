@@ -1,5 +1,11 @@
 # NLP_3A
 
+## Qui gère ce `git` ?
+
+Le projet a été réalisé à deux, par Caroline Lebrun-Sabalot et Matéo Garbe. 
+Comme requis, chacun des collaborateur a produit son propre rapport. 
+Les rapports individuels sont disponibles dans le dossier correspondant. 
+
 
 ## Prérequis 
 
