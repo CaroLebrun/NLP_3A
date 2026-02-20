@@ -6,3 +6,10 @@ seaborn
 matplotlib 
 nltk
 numpy<=2.3.0 
+ipykernel==7.1.0
+#pandas==2.3.3
+scikit-learn==1.7.2
+wordcloud==1.9.6
+transformers==5.0.0
+torch==2.10.0
+torchvision==0.25.0
