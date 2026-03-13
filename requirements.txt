@@ -5,6 +5,7 @@ hdbscan
 seaborn 
 matplotlib 
 nltk
+spacy
 numpy<=2.3.0 
 ipykernel==7.1.0
 #pandas==2.3.3
