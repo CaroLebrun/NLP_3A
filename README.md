@@ -12,6 +12,15 @@ Les rapports individuels sont disponibles dans le dossier correspondant.
 Avant de commencer, lancez :
 
 ```bash
+python3 -m venv mon_env
+source env/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Puis 
+
+```bash
 pip install -e .
 ```
 
