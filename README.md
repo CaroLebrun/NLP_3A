@@ -9,7 +9,11 @@ Les rapports individuels sont disponibles dans le dossier correspondant.
 
 ## Prérequis 
 
-Executez à partir du dossier src dans le `terminal` la commande suivante : `touch __init__.py`
+Avant de commencer, lancez :
+
+```bash
+pip install -e .
+```
 
 ## Notes
 
