@@ -5,39 +5,37 @@ import nltk
 from nltk.corpus import stopwords
 import re
 
-#FONCTION MAIN 
+nltk.download('stopwords')
+STOP_WORDS = set(stopwords.words('french'))
 
-def raw_data_cleaning(path_meta,path_zip):
-    #lecture metdonnées
+# FONCTION MAIN
+
+
+def raw_data_cleaning(path_meta, path_zip):
+    # lecture metdonnées
     metadonnees = pd.read_csv("data/archelect_search.zip", compression="zip")
 
-    #decompression et creation dict.
+    # decompression et creation dict.
     texts = extract_texts_from_zips("data/text_files")
 
-    #merge avec métadonnées
-    meta_et_texts=meta_et_texts = pd.merge(
+    # merge avec métadonnées
+    meta_et_texts = meta_et_texts = pd.merge(
         metadonnees,
         texts,
         on="id",
         how="right")
 
-    #nettotyage stopwords
+    # nettoyage stopwords
     meta_et_texts['texte_clean'] = meta_et_texts['text'].apply(stopwords_cleaning)
     meta_et_texts.drop_duplicates(inplace=True)
 
-    #format
+    # format
     meta_et_texts['annee'] = pd.to_datetime(meta_et_texts['date'], errors='coerce').dt.year
 
     return meta_et_texts
 
 
-
-
-
-
-
-#SOUS-FONCTIONS 
- 
+# SOUS-FONCTIONS
 def extract_texts_from_zips(base_dir: str) -> pd.DataFrame:
     """
     Parcourt tous les fichiers ZIP dans `base_dir` (y compris les sous-dossiers),
@@ -78,12 +76,9 @@ def extract_texts_from_zips(base_dir: str) -> pd.DataFrame:
 
 
 def stopwords_cleaning(text):
-    #télchargement des stopwords en français
-    nltk.download('stopwords')
-    stop_words = set(stopwords.words('french'))
     text = str(text).lower()
     text = re.sub(r'\d+', '', text)
     text = re.sub(r'\s+', ' ', text)
     text = re.sub(r'[^\w\s]', '', text)
-    words = [w for w in text.split() if w not in stop_words]
+    words = [w for w in text.split() if w not in STOP_WORDS]
     return ' '.join(words)
