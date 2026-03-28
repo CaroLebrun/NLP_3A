@@ -8,7 +8,7 @@ Les rapports individuels sont disponibles dans le dossier correspondant.
 
 
 ## Prérequis 
-
+Si vous utilisez onyxia, paramétrez les paramètres minimaux et maximaux de RAM et de CPU à un niveau très élevé. 
 Avant de commencer, lancez :
 
 ```bash
