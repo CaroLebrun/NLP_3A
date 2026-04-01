@@ -77,28 +77,6 @@ def extract_texts_from_zips(base_dir: str) -> pd.DataFrame:
     return df
 
 
-def stopwords_and_punctuation_cleaning(text):
-    text = str(text).lower()
-    # enlever chiffres
-    text = re.sub(r'\d+', '', text)    
-    # normaliser espaces
-    text = re.sub(r'\s+', ' ', text)
-    # garder les apostrophes
-    text = re.sub(r"[^\w\s']", '', text)
-    words = []
-    for w in text.split():
-        # gérer les mots avec apostrophe (ex: l'école)
-        if "'" in w:
-            parts = w.split("'")
-            for p in parts:
-                if p and p not in STOP_WORDS:
-                    words.append(p)
-        else:
-            if w not in STOP_WORDS:
-                words.append(w)
-
-    return ' '.join(words)
-
 
 
 def clean_text(text: str) -> str:
