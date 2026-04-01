@@ -5,6 +5,7 @@ import nltk
 from nltk.corpus import stopwords
 import re
 
+
 nltk.download('stopwords')
 STOP_WORDS = set(stopwords.words('french'))
 
@@ -26,6 +27,7 @@ def raw_data_cleaning(path_meta, path_zip):
         how="right")
 
     # nettoyage stopwords
+    meta_et_texts['text'] = meta_et_texts['text'].apply(clean_text)
     meta_et_texts['texte_clean'] = meta_et_texts['text'].apply(stopwords_and_punctuation_cleaning)
     meta_et_texts.drop_duplicates(inplace=True)
 
@@ -96,3 +98,42 @@ def stopwords_and_punctuation_cleaning(text):
                 words.append(w)
 
     return ' '.join(words)
+
+
+
+def clean_text(text: str) -> str:
+    """
+    Nettoie une chaîne de caractères pour préparer les données pour BERT.
+
+    Transformations appliquées :
+    - Remplace les sauts de ligne (\\n) par un espace
+    - Supprime les caractères carrés (■, □, ▪, ▫, etc.)
+    - Remplace '- ' par '' (pour recoller les mots coupés)
+    - Supprime le point entre deux chiffres (3.000 → 3000)
+
+    Args:
+        text: Chaîne de caractères à nettoyer
+
+    Returns:
+        Chaîne nettoyée
+    """
+    if not isinstance(text, str):
+        return text
+
+    text = text.replace('\n', ' ')
+    text = re.sub(r'[\u25A0-\u25FF■□▪▫▬▮]', '', text)
+    text = text.replace('- ', '')
+    text = re.sub(r'(?<=\d)\.(?=\d)', '', text)
+    text = re.sub(r' +', ' ', text).strip()
+    text = re.sub(r'sciences\s*po', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'fonds\s*cevipof', '', text, flags=re.IGNORECASE)
+    text = text.replace('/', ' ')
+    # corriger toutes les apostrophes "cassées"
+    text = re.sub(r"\\+'", "'", text)   # gère \', \\', \\\' etc.
+
+    # supprimer les backslashes restants
+    text = re.sub(r"\\+", " ", text)
+    text = text.replace("\\\'", "'")
+    text = re.sub(r'\s+', ' ', text).strip() #espaces parasites
+    
+    return text
