@@ -115,3 +115,9 @@ def clean_text(text: str) -> str:
     text = re.sub(r'\s+', ' ', text).strip() #espaces parasites
     
     return text
+
+
+
+def clean_prof(x):
+    x = re.sub(r"[^\w\s-]", "", x)
+    return x
