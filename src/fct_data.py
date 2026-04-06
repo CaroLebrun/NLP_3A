@@ -28,7 +28,6 @@ def raw_data_cleaning(path_meta, path_zip):
 
     # nettoyage stopwords
     meta_et_texts['text'] = meta_et_texts['text'].apply(clean_text)
-    meta_et_texts['texte_clean'] = meta_et_texts['text'].apply(stopwords_and_punctuation_cleaning)
     meta_et_texts.drop_duplicates(inplace=True)
 
     # format
@@ -77,8 +76,6 @@ def extract_texts_from_zips(base_dir: str) -> pd.DataFrame:
     return df
 
 
-
-
 def clean_text(text: str) -> str:
     """
     Nettoie une chaîne de caractères pour préparer les données pour BERT.
@@ -113,9 +110,7 @@ def clean_text(text: str) -> str:
     text = re.sub(r"\\+", " ", text)
     text = text.replace("\\\'", "'")
     text = re.sub(r'\s+', ' ', text).strip() #espaces parasites
-    
     return text
-
 
 
 def clean_prof(x):
