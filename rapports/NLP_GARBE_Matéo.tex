@@ -1,0 +1,244 @@
+\documentclass{article}
+
+\usepackage[final]{neurips_2026}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{subcaption}
+\usepackage{float}
+
+\title{Projet NLP Ensae 3A}
+
+\author{
+  Matéo Garbe \\
+  Ensae 3A \\
+  \texttt{mateo.garbe@ensae.fr} \\
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    This projet analyzes French electoral manifestos from 1973 to 1993 using topic modeling and semantic embedding techniques. We identify the main themes of political discourse and study their evolution across parties and elections. We further link these themes to candidates’ socio-professional categories through an embedding-based classification approach. 
+\end{abstract}
+
+\section{Introduction and problem}
+
+The objective of this project is to analyze campaign manifestos of candidates from various elections held in France between 1973 and 1993. The corpus on which we base our work was collected and digitized by Sciences Po. For each manifesto, we have access to the election, the candidate(s), the supporting political parties, and the text of the manifesto.
+
+We chose to address the topic \textit{Topic Modeling \& Temporal Evolution}, which consists of two main research directions:
+\begin{enumerate}
+    \item Identify the main theme of each manifesto and map its evolution over time according to political affiliations. This part relies on topic modeling, a Natural Language Processing (NLP) technique that analyzes a corpus of text by automatically identifying the most frequently occurring themes. As topic modeling is an unsupervised learning method, human interpretation is required to evaluate the coherence of the extracted topics and assign meaningful labels to them.
+    \item  Establish a link between the themes identified in (1) and the candidate's profession or socio-professional category (PCS). Since the profession is in free-text field style, it requires reclassification into standardized categories. To address this, we rely on text embeddings and a semantic matching approach, mapping each profession to the closest PCS category.
+\end{enumerate}
+
+
+\section{Data}
+
+Our dataset consists of campaign manifestos from several French legislative elections held between 1973 and 1993 (1973, 1978, 1981, 1988, 1993). In total, the corpus contains 21 697 scanned documents, among which 21 167 usable texts were extracted. The textual statistics are as follows: the average length is 689 words per document, with a median of 616 words, a minimum of 10 words, and a maximum of 3 870 words.
+
+Across all years, we identify a total of 907 political parties. The 15 most represented parties are shown in figure \ref{fig:stats_desc} and account for approximately 70\% of the documents.
+
+Additionally, the dataset includes 3 397 distinct profession entries. A large proportion of these professions are highly sparse, with 68\% appearing only once. Examples of such rare entries include: \textit{"chargé de mission inspection générale Ministre de l'Education nationale", "gynécologue-accoucheur"; "directeur clinique", "agrégée philosophie; maître de conférences Université", "attaché administration centrale Ministère des Postes et Télécommunications", "directeur ateliers collège enseignement technique", etc.}. This high variability further motivates the need for reclassification into standardized socio-professional categories.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{stats_desc.png}
+    \caption{Main political parties represented in the campaign manifestos from 1973 to 1993}
+    \label{fig:stats_desc}
+\end{figure}
+
+\section{Litterature}
+
+A  brief review suggests that, while methodological advances in text-as-data have been substantial in recent years, their application to electoral manifestos remains limited. In particular, the integration of textual analysis with socio-economic variables such as occupational categories or candidate profiles is still underexplored. Among other works, the Manifesto Project \citep{manifestoproject2024} and related studies illustrate the transition from manual content coding based on human annotation of quasi sentences to large scale automated methods. Earlier other approaches such as Wordscore \citep{laver2003} pioneered the idea of inferring ideological positions from word distributions, but remain limited compared to modern context-aware models that better capture semantic structure. Moreover, it is worth noting that, compared to well-established corpora such as MARPOR, Archelec seems to have received relatively limited attention in the computational literature, particularly within NLP-based studies. Existing work is largely descriptive, with only limited use of modern text analysis methodologies.
+This gap motivates our study, which relies on Archelec to combine topic modeling with socio-professional information, aiming to better link political discourse with candidates' characteristics.
+
+\section{Models}
+
+
+\subsection{Topic Modeling}
+
+For the first part of our analysis, we explore two different topic modeling approaches: Non-negative Matrix Factorization (NMF) and BERTopic.
+
+\paragraph{Non-negative Matrix Factorization (NMF).}
+Non-negative Matrix Factorization (NMF) is a linear algebra-based topic modeling method that decomposes a document-term matrix into two lower-dimensional non-negative matrices. The first matrix represents the importance of each topic within each document, while the second matrix captures the importance of each word within each topic. When applied to text data represented through TF-IDF features, NMF produces interpretable topics characterized by sets of highly weighted words, making it particularly suitable for exploratory analysis of large corpora.
+
+\paragraph{BERTopic.}
+BERTopic is a topic modeling framework that relies on contextual embeddings to capture semantic similarities between documents. It combines transformer-based sentence embeddings, dimensionality reduction techniques, and density-based clustering to identify topics that reflect deeper semantic structures beyond simple word co-occurrence patterns. In this work, we use CamemBERT, a transformer model pre-trained on French text. Given its 512-token maximum input length, longer documents are segmented into smaller chunks prior to processing, thereby minimizing truncation and preserving contextual information. Because BERTopic relies on contextual embeddings, lemmatization or stemming is not required. However, careful preprocessing is performed to clean punctuation and remove noisy whitespace in order to ensure that the tokenizer correctly interprets the structure of the text and avoids segmentation errors.
+
+\subsection{Occupation classification}
+
+For the processing of professions, we use CamemBERT to compute embeddings for two types of textual inputs: (i) the free-text profession entries extracted from the dataset, and (ii) the detailed INSEE socio-professional classification (PCS, level 4). Each profession and PCS description is encoded into a shared semantic embedding space using CamemBERT. We then compute cosine similarity between the embeddings of free-text professions and PCS categories. Each profession is assigned to the PCS category with the highest similarity score, allowing us to map unstructured occupational data to a standardized socio-professional taxonomy.
+
+Initially, we did not rely on the INSEE PCS nomenclature. Instead, we applied topic modeling directly to the profession field and manually interpreted the resulting clusters. However, this approach made it difficult to clearly distinguish between different dimensions of socio-professional status, in particular the economic sector (e.g., industry, agriculture, commerce) and the occupational status (e.g., employee, worker, self-employed, executive). 
+
+The proposed embedding-based mapping over the PCS nomenclature addresses this limitation by explicitly leveraging a structured taxonomy that jointly captures both dimensions, leading to a more consistent and interpretable classification of professions.
+
+\section{Results}
+
+\subsection{Topic Modeling}
+
+\subsection{Comparison between NMF and BERTopic}
+
+We compare the results obtained from NMF and BERTopic for topic modeling on the corpus of campaign manifestos. Surprisingly, BERTopic performs significantly worse than NMF in this setting. More than 90\% of the documents are assigned to only two overly broad and generic topics, despite extensive tuning of UMAP and DBSCAN hyperparameters.
+
+We hypothesize that this underperformance is due to the nature of the corpus itself, which is composed of highly generic and repetitive political texts. In addition, the presence of a large number of named entities (e.g., candidate names, political parties, and institutions) may distort the semantic embedding space, leading to poor topic separation.
+
+In contrast, NMF produces more structured and interpretable topics based on word frequency patterns, which appear better suited to this type of data.
+
+Figure \ref{fig:NMF} illustrates the temporal distribution of the six main topics over time, while Figure \ref{fig:topics_evolution} shows the overrepresentation of topics across political parties and elections. Across all elections, appeals to political change and alternation remain the most dominant theme. Some election-specific dynamics also emerge, such as the increased focus on immigration in the 1993 election, strongly associated with the Front National.
+
+However, a significant portion of the results remains difficult to interpret, as the extracted topics are still relatively broad and lack historical context, limiting their fine-grained interpretability.
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{NMF.png}
+    \caption{Topic Modeling (first 6 main topics) from 1973 to 1993}
+    \label{fig:NMF}
+\end{figure}
+
+
+
+
+\subsection{Topics and candidates' occupations}
+
+Figure \ref{fig:top_pcs} details the main reclassified occupations. It should be noted that this classification covers only 40\% of the electoral manifestos, as occupation data is missing for the remaining cases.
+
+The results reveal a strong correlation between certain socio-professional categories (PCS) and specific thematic orientations, partly driven by the association between PCS and political parties. The corresponding findings are presented in Figures \ref{fig:occ_top_evolution} and \ref{fig:occ_part_evolution}.
+
+Overall, workers are overrepresented in electoral manifestos emphasizing environmental protection and animal welfare between 1973 and 1988. This pattern is also particularly pronounced \textit{lutte ouvrière}, where these themes constitute a central ideological focus and where workers are likewise strongly overrepresented.
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{top12_pcs.png}
+    \caption{First 12 standardized professions (INSEE PCS, level 2)}
+    \label{fig:top_pcs}
+\end{figure}
+
+
+\section{Conclusion}
+
+Our findings show that topic modeling combined with semantic matching provides useful insights into the structure of political discourse. While NMF proves more effective than BERTopic for this corpus, interpretability remains limited by the generic nature of the texts. The analysis reveals meaningful correlations between socio-professional categories, political parties, and themes. 
+
+
+\bibliographystyle{plainnat}
+\bibliography{ref}
+
+\newpage
+
+\appendix
+
+
+
+\section{Supplementary figures}
+
+
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{0.7\linewidth}
+          \centering
+          \includegraphics[width=1\linewidth]{theme_1973.png}
+          \caption{1973}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}{0.7\linewidth}
+          \centering
+          \includegraphics[width=1\linewidth]{theme_1988.png}
+          \caption{1988}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}{0.7\linewidth}
+          \centering
+          \includegraphics[width=1\linewidth]{theme_1993.png}
+          \caption{1993}
+    \end{subfigure}
+
+    \caption{Overrepresentation and underrepresentation of themes by political party and elections (7 leading parties represented in elections)}
+    \label{fig:topics_evolution}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+
+    \begin{subfigure}{0.7\linewidth}
+
+     \centering
+     \includegraphics[width=0.7\linewidth]{occ_top_1973.png}
+          \caption{1973}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}{0.7\linewidth}
+     \centering
+            \includegraphics[width=1\linewidth]{occ_top_1981.png}
+          \caption{1981}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}{0.7\linewidth}
+          \centering
+          \includegraphics[width=1\linewidth]{occ_top_1993.png}
+          \caption{1993}
+    \end{subfigure}
+
+    \caption{Overrepresentation and underrepresentation of themes by occupations and elections (7 leading parties represented in elections)}
+    \label{fig:occ_top_evolution}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+
+    \begin{subfigure}{0.7\linewidth}
+          \centering
+            \includegraphics[width=1\linewidth]{occ_part_1973.png}
+          \caption{1973}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}{0.7\linewidth}
+      \centering
+      \includegraphics[width=1\linewidth]{occ_part_1981.png}
+          \caption{1981}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}{0.7\linewidth}
+              \centering
+              \includegraphics[width=1\linewidth]{occ_part_1993.png}
+          \caption{1993}
+    \end{subfigure}
+
+    \caption{Overrepresentation and underrepresentation of occupations by political party and elections (7 leading parties represented in elections)}
+    \label{fig:occ_part_evolution}
+\end{figure}
+
+
+
+
+\end{document}
