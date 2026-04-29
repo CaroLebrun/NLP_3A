@@ -95,30 +95,25 @@ We hypothesize that this underperformance is due to the nature of the corpus its
 
 In contrast, NMF produces more structured and interpretable topics based on word frequency patterns, which appear better suited to this type of data.
 
-Figure \ref{fig:NMF} illustrates the temporal distribution of the six main topics over time, while Figure \ref{fig:topics_evolution} shows the overrepresentation of topics across political parties and elections. Across all elections, appeals to political change and alternation remain the most dominant theme. Some election-specific dynamics also emerge, such as the increased focus on immigration in the 1993 election, strongly associated with the Front National.
-
-However, a significant portion of the results remains difficult to interpret, as the extracted topics are still relatively broad and lack historical context, limiting their fine-grained interpretability.
-
-
-
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
     \includegraphics[width=1\linewidth]{NMF.png}
     \caption{Topic Modeling (first 6 main topics) from 1973 to 1993}
     \label{fig:NMF}
 \end{figure}
 
+Figure \ref{fig:NMF} illustrates the temporal distribution of the six main topics over time, while Figure \ref{fig:topics_evolution} shows the overrepresentation of topics across political parties and elections. Across all elections, appeals to political change and alternation remain the most dominant theme. Some election-specific dynamics also emerge, such as the defence of workers and anti-capitalism in the 1973, 1981 and 1988 elections, coinciding with strong performances by the far left, particularly Lutte ouvrière, but also the Parti communiste (PCF). Liberalism and taxation also emerge as distinctive themes in the 1988 election, notably under the influence of the Front National. Finally, the increased focus on immigration stands out in the 1993 election, again strongly associated with the Front National.
+
+Calls for alternation also appear broadly consistent with the political context. For example, the 1981 legislative election took place just after the election of François Mitterrand to the presidency, and neither the Parti socialiste nor the Parti socialiste unifié placed particular emphasis on alternation that year, relative to other parties. By contrast, the 1988 election followed a period of cohabitation between François Mitterrand and a right-wing parliamentary majority, and the Parti socialiste this time clearly campaigned on alternation.
+
+Similarly, the rise of Lutte ouvrière in the 1980s and of the Front National in the 1990s did not occur through appeals to alternation. Instead, these parties pursued strategies centred on a limited number of specific subjects rather than on the conquest of a ruling majority. More generally, alternation appears somewhat overrepresented among major political parties, likely because it offers a less divisive and more electorally consensual framing.
 
 
 
 \subsection{Topics and candidates' occupations}
 
 Figure \ref{fig:top_pcs} details the main reclassified occupations. It should be noted that this classification covers only 40\% of the electoral manifestos, as occupation data is missing for the remaining cases.
-
 The results reveal a strong correlation between certain socio-professional categories (PCS) and specific thematic orientations, partly driven by the association between PCS and political parties. The corresponding findings are presented in Figures \ref{fig:occ_top_evolution} and \ref{fig:occ_part_evolution}.
-
-Overall, workers are overrepresented in electoral manifestos emphasizing environmental protection and animal welfare between 1973 and 1988. This pattern is also particularly pronounced \textit{lutte ouvrière}, where these themes constitute a central ideological focus and where workers are likewise strongly overrepresented.
-
 
 \begin{figure}[H]
     \centering
@@ -128,10 +123,15 @@ Overall, workers are overrepresented in electoral manifestos emphasizing environ
 \end{figure}
 
 
+Overall, workers are overrepresented in electoral manifestos emphasizing defense of workers between 1973 and 1988. This pattern is particularly pronounced within Lutte ouvrière, where these themes constitute a central ideological focus and where workers are likewise strongly overrepresented.
+Calls for alternation are also a theme frequently advanced by candidates from agricultural backgrounds. In 1993, the rise of immigration as a campaign issue was driven primarily by popular occupational groups, largely excluding executives (cadres) and intermediate professions, who were themselves heavily overrepresented respectively within the Rassemblement pour la République and the Parti socialiste, two parties whose campaign agendas placed little, if any, emphasis on immigration. More generally, candidate social profiles appear to be strongly correlated with party affiliation, and therefore with the themes promoted by parties. This sometimes produces seemingly surprising results, such as artisans, shopkeepers, and business owners being overrepresented in 1993 within the class struggle theme, although this occupational category remains highly heterogeneous.
+
+
+
+
 \section{Conclusion}
 
 Our findings show that topic modeling combined with semantic matching provides useful insights into the structure of political discourse. While NMF proves more effective than BERTopic for this corpus, interpretability remains limited by the generic nature of the texts. The analysis reveals meaningful correlations between socio-professional categories, political parties, and themes. 
-
 
 \bibliographystyle{plainnat}
 \bibliography{ref}
@@ -141,67 +141,65 @@ Our findings show that topic modeling combined with semantic matching provides u
 \appendix
 
 
-
 \section{Supplementary figures}
-
-
 
 \begin{figure}[H]
     \centering
-
     \begin{subfigure}{0.7\linewidth}
           \centering
           \includegraphics[width=1\linewidth]{theme_1973.png}
           \caption{1973}
     \end{subfigure}
-
     \vspace{0.5cm}
-
+    \begin{subfigure}{0.7\linewidth}
+          \centering
+          \includegraphics[width=1\linewidth]{theme_1981.png}
+          \caption{1981}
+    \end{subfigure}
+    \vspace{0.5cm}
     \begin{subfigure}{0.7\linewidth}
           \centering
           \includegraphics[width=1\linewidth]{theme_1988.png}
           \caption{1988}
     \end{subfigure}
+\end{figure}
 
-    \vspace{0.5cm}
-
+\begin{figure}[H]
+    \ContinuedFloat
+    \centering
     \begin{subfigure}{0.7\linewidth}
           \centering
           \includegraphics[width=1\linewidth]{theme_1993.png}
           \caption{1993}
     \end{subfigure}
-
     \caption{Overrepresentation and underrepresentation of themes by political party and elections (7 leading parties represented in elections)}
     \label{fig:topics_evolution}
 \end{figure}
 
 
+\newpage
+
+
+
 \begin{figure}
     \centering
-
     \begin{subfigure}{0.7\linewidth}
-
      \centering
-     \includegraphics[width=0.7\linewidth]{occ_top_1973.png}
+     \includegraphics[width=0.8\linewidth]{occ_top_1973.png}
           \caption{1973}
     \end{subfigure}
-
     \vspace{0.5cm}
-
     \begin{subfigure}{0.7\linewidth}
      \centering
             \includegraphics[width=1\linewidth]{occ_top_1981.png}
           \caption{1981}
     \end{subfigure}
-
-    \vspace{0.5cm}
-
+        \vspace{0.5cm}
     \begin{subfigure}{0.7\linewidth}
           \centering
           \includegraphics[width=1\linewidth]{occ_top_1993.png}
           \caption{1993}
     \end{subfigure}
-
     \caption{Overrepresentation and underrepresentation of themes by occupations and elections (7 leading parties represented in elections)}
     \label{fig:occ_top_evolution}
 \end{figure}
